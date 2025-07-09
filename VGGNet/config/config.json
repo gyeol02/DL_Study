@@ -1,6 +1,6 @@
 {
     "device": "cpu",
-    "model_name": "vggnet10",
+    "model_name": "vggnet11",
     "n_classes": 10,
     "batch_size": 128,
     "opt_name": "adam",

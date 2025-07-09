@@ -6,11 +6,10 @@ class LayerBlock(nn.Module):
         self.conv1 = nn.Conv2d(in_ch, out_ch, kernel_size=3, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(out_ch)
         self.relu = nn.ReLU(inplace=True)
-        self.maxpool = nn.MaxPool2d(kernel_size=2)
 
     def forward(self, x):
         x = self.relu(self.bn1(self.conv1(x)))
-        x = self.maxpool(x)
+        
         return x
 
 class VGGNet(nn.Module):
@@ -23,6 +22,8 @@ class VGGNet(nn.Module):
         self.layer3 = self._make_layer(block, 256, layers[2])
         self.layer4 = self._make_layer(block, 512, layers[3])
         self.layer5 = self._make_layer(block, 512, layers[4])
+
+        self.maxpool = nn.MaxPool2d(kernel_size=2)
 
         self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
         
@@ -51,15 +52,26 @@ class VGGNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.layer1(x)  
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-        x = self.layer5(x)
+        x = self.layer1(x) 
+        x = self.maxpool(x)
 
-        x = self.avgpool(x)          
-        x = x.view(x.shape[0], -1)   
-        x = self.fc(x)               
+        x = self.layer2(x)
+        x = self.maxpool(x)
+
+        x = self.layer3(x)
+        x = self.maxpool(x)
+
+        x = self.layer4(x)
+        x = self.maxpool(x)
+
+        x = self.layer5(x)
+        x = self.maxpool(x)
+
+        x = self.avgpool(x)
+        x = x.view(x.shape[0], -1)
+        
+        x = self.classifier(x)
+
         return x
 
 class VGGNet11(VGGNet):
