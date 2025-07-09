@@ -1,0 +1,11 @@
+{
+    "device": "cpu",
+    "model_name": "resnet50",
+    "n_classes": 10,
+    "batch_size": 128,
+    "opt_name": "adam",
+    "lr": 1e-4,
+    "data_dir": "./dataset/data",
+    "early_stopping": 10,
+    "num_epochs": 5
+}

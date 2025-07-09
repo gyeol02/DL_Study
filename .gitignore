@@ -1,0 +1,11 @@
+# Python 관련
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# macOS 숨김파일
+.DS_Store
+
+
