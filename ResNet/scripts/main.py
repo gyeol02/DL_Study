@@ -128,6 +128,8 @@ def validate(model, val_loader, criterion, device):
         for img, label in val_loader:
             img, label = img.to(device), label.to(device)
             out = model(img)
+            loss = criterion(out, label)
+            
             _, pred = torch.topk(out, k=1, dim=-1)
             pred = pred.squeeze(dim=1)
 
