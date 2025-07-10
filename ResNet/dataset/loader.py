@@ -12,7 +12,6 @@ def dataset_loader(data_dir: str = "./dataset/data", batch_size: int = 128):
     ])
 
     transforms_val = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),
         transforms.ToTensor(),
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
     ])
