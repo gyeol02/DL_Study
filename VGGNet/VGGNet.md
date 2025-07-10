@@ -41,6 +41,6 @@ VGGNet/
 ├── dataset/
 │   └── loader.py           # 데이터셋 로딩 및 전처리
 ├── models/
-│   └── resnet.py           # ResNet 모델 구현
+│   └── resnet.py           # VGGNet 모델 구현
 ├── scripts/
 │   └── main.py             # 학습 및 테스트 실행
