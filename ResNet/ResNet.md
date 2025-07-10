@@ -40,14 +40,14 @@ Residual block은 다음과 같이 구성됩니다:
 ---
 
 ## 4. 사용법 및 설정
-- config/config.json 파일에서 모델명을 "resnet50", "resnet101", "resnet152" 등으로 바꾸어 다양한 버전을 학습시킬 수 있습니다.
-- 학습, 모델 정의, 데이터 로딩이 모듈화 했습니다.
+- config/config.json 파일에서 모델명을 "resnet50", "resnet101", "resnet152"로 바꾸어 다양한 버전을 학습 가능
+- 학습, 모델 정의, 데이터 로딩 모듈화
 
 ---
 
 ## 5. 디렉토리 구조
 ```
-RESNET/
+ResNet/
 ├── config/
 │   └── config.json         # 모델 및 학습 설정
 ├── dataset/
