@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -7,9 +8,12 @@ import json
 from typing import Type, TypeVar
 from dataclasses import dataclass, field, fields
 
+import time
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from tqdm import tqdm
+from tensorboardX import SummaryWriter
 
 from models.resnet import ResNet50, ResNet101, ResNet152
 from dataset.loader import dataset_loader
@@ -92,11 +96,14 @@ def model_type(config: Config):
     else:
         raise ValueError(f"Unsupported model: {config.model_name}")
 
-def train(model, train_loader, criterion, optimizer, device):
+def train(model, train_loader, criterion, optimizer, device, writer, epoch):
     model.train()
-    train_correct_cnt = 0
+    total_loss = 0.0
+    correct = 0
     total = 0
-    for img, label in train_loader:
+
+    loop = tqdm(train_loader, desc=f"Train Epoch {epoch}", leave=False, dynamic_ncols=True)
+    for img, label in loop:
         img, label = img.to(device), label.to(device)
         out = model(img)
         loss = criterion(out, label)
@@ -105,44 +112,59 @@ def train(model, train_loader, criterion, optimizer, device):
         loss.backward()
         optimizer.step()
 
-        _, pred = torch.topk(out, k=1, dim=-1)
-        pred = pred.squeeze(dim=1)
+        _, pred = torch.topk(out, 1, dim=1)
+        pred = pred.squeeze(1)
 
-        train_correct_cnt += int(torch.sum(pred == label))
+        correct += (pred == label).sum().item()
         total += label.size(0)
+        total_loss += loss.item()
 
-        batch_correct = int(torch.sum(pred == label))
-        batch_total = label.size(0)
-        batch_acc = batch_correct / batch_total
-        print(f"Train Batch Accuarcy: {batch_acc:.2%}")
+        loop.set_postfix({
+            "Loss": f"{loss.item():.4f}",
+            "Acc": f"{(correct / total):.2%}"
+        })
 
-    epoch_acc = train_correct_cnt / total
-    print(f"Train Epoch Accuracy: {epoch_acc:.2%}")
+    epoch_loss = total_loss / len(train_loader)
+    epoch_acc = correct / total
+
+    writer.add_scalar("Train/Loss", epoch_loss, epoch)
+    writer.add_scalar("Train/Accuracy", epoch_acc, epoch)
+
+    return epoch_loss, epoch_acc
 
 
-def validate(model, val_loader, criterion, device):
+def validate(model, val_loader, criterion, device, writer, epoch):
     model.eval()
-    val_correct_cnt = 0
+    total_loss = 0.0
+    correct = 0
     total = 0
+
     with torch.no_grad():
-        for img, label in val_loader:
+        loop = tqdm(val_loader, desc=f"Val Epoch {epoch}", leave=False, dynamic_ncols=True)
+        for img, label in loop:
             img, label = img.to(device), label.to(device)
             out = model(img)
             loss = criterion(out, label)
-            
-            _, pred = torch.topk(out, k=1, dim=-1)
-            pred = pred.squeeze(dim=1)
 
-            val_correct_cnt += int(torch.sum(pred == label))
+            _, pred = torch.topk(out, 1, dim=1)
+            pred = pred.squeeze(1)
+
+            correct += (pred == label).sum().item()
             total += label.size(0)
+            total_loss += loss.item()
 
-            batch_correct = int(torch.sum(pred == label))
-            batch_total = label.size(0)
-        batch_acc = batch_correct / batch_total
-        print(f"Validation Batch Accuarcy: {batch_acc:.2%}")
+            loop.set_postfix({
+            "Loss": f"{loss.item():.4f}",
+            "Acc": f"{(correct / total):.2%}"
+        })
 
-    epoch_acc = val_correct_cnt / total
-    print(f"Validation Epoch Accuracy: {epoch_acc:.2%}")
+    epoch_loss = total_loss / len(val_loader)
+    epoch_acc = correct / total
+
+    writer.add_scalar("Val/Loss", epoch_loss, epoch)
+    writer.add_scalar("Val/Accuracy", epoch_acc, epoch)
+
+    return epoch_loss, epoch_acc
 
             
 
@@ -166,12 +188,26 @@ def main():
         optimizer = optim.SGD(model.parameters(), lr=config.lr, momentum=0.9)
     else:
         raise ValueError(f"Unsupported optimizer: {config.opt_name}")
+    
+    log_dir = os.path.join("runs")
+    writer = SummaryWriter(log_dir=f"{log_dir}/{config.model_name}")
+
 
     for epoch in range(config.num_epochs):
-        print(f"\nEpoch {epoch+1}/{config.num_epochs}")
-        train(model, train_loader, criterion, optimizer, device)
-        validate(model, val_loader, criterion, device)
+        start_time = time.time()
 
+        print(f"\nEpoch {epoch+1}/{config.num_epochs}")
+        train_loss, train_acc = train(model, train_loader, criterion, optimizer, device, writer, epoch)
+        val_loss, val_acc = validate(model, val_loader, criterion, device, writer, epoch)
+
+        epoch_time = time.time() - start_time
+        mins, secs = divmod(int(epoch_time), 60)
+
+        print(f"Epoch Time: {mins}m {secs}s")
+        print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2%}")
+        print(f"Val   Loss: {val_loss:.4f} | Val   Acc: {val_acc:.2%}")
+
+    writer.close()
     
 if __name__ == "__main__":
     main()
