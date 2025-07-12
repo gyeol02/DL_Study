@@ -37,7 +37,7 @@ class BottleneckBlock(nn.Module):
 class ResNet(nn.Module):
     def __init__(self, block, layers, n_classes=10):
         super().__init__()
-        self. in_ch = 64
+        self.in_ch = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = nn.BatchNorm2d(64)

@@ -14,7 +14,7 @@ import torch.optim as optim
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 
-from models.vggnet import VGGNet11, VGGNet13, VGGNet16, VGGNet19
+from models.densenet import DenseNet121, DenseNet169, DenseNet201, DenseNet264
 from dataset.loader import dataset_loader
 
 T = TypeVar('T')
@@ -86,14 +86,14 @@ class Config:
     )
 
 def model_type(config: Config):
-    if config.model_name == "vggnet11":
-        return VGGNet11(n_classes = config.n_classes)
-    elif config.model_name == "vggnet13":
-        return VGGNet13(n_classes = config.n_classes)
-    elif config.model_name == "vggnet16":
-        return VGGNet16(n_classes = config.n_classes)
-    elif config.model_name == "vggnet19":
-        return VGGNet19(n_classes = config.n_classes)
+    if config.model_name == "densenet121":
+        return DenseNet121(n_classes = config.n_classes)
+    elif config.model_name == "densenet169":
+        return DenseNet169(n_classes = config.n_classes)
+    elif config.model_name == "densenet201":
+        return DenseNet201(n_classes = config.n_classes)
+    elif config.model_name == "densenet264":
+        return DenseNet264(n_classes = config.n_classes)
     else:
         raise ValueError(f"Unsupported model: {config.model_name}")
 
