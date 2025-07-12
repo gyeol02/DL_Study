@@ -3,7 +3,7 @@
 ## 1. 개요
 
 기존의 딥러닝 CNN 아키텍쳐들이 **네트워크의 depth를 증가**시켜 성능을 높이려는 시도를 지속했지만,
-이는 Gradient Vanishing, Feature Reuse 부족, 파러미터 수 과다 등의 한계를 가졌습니다.
+이는 **Gradient Vanishing, Feature Reuse 부족, 파러미터 수 과다 등의 한계**를 가졌습니다.
 
 이러한 문제를 완화하기 위해 **ResNet**의 **Skip Connection**을 통해 **identity** 정보를 더하여 학습의 안정성과 정보 보존에 도움을 주었습니다.
 하지만 이 또한 바로 이전 레이어의 출력만 전달하여 **Feature Reuse에 제한적**이라는 단점이 있습니다.
@@ -13,7 +13,6 @@
 
 ```
 x_l = H_l([x_0, x_1, …, x_{l-1}])
-
 ```
 
 ---
@@ -54,7 +53,7 @@ ResNet/
 ├── dataset/
 │   └── loader.py           # 데이터셋 로딩 및 전처리
 ├── models/
-│   └── densenet.py           # DenseNet 모델 구현
+│   └── densenet.py         # DenseNet 모델 구현
 ├── scripts/
 │   └── main.py             # 학습 및 테스트 실행
 ```
