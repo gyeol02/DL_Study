@@ -47,7 +47,7 @@ x_l = H_l([x_0, x_1, …, x_{l-1}])
 
 ## 5. 디렉토리 구조
 ```
-ResNet/
+DenseNet/
 ├── config/
 │   └── config.json         # 모델 및 학습 설정
 ├── dataset/
