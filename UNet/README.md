@@ -3,10 +3,12 @@
 ## 1. 개요
 
 기존의 패치 단위의 CNN은 이미지 Classification에는 효과적이었지만, **픽셀 단위로 구분해야하는 Segmentation 작업에는 한계**가 존재했습니다.
+
 따라서, **적은 양의 데이터**로도 **정확한 위치 기반 분할**이 가능한 모델이 필요했습니다.
 
-이러한 한계를 해결하기 위한 **UNet**은 소량의 학습 데이터로도 정확한 Segmentation을 수행할 수 있으며, 데이터 증강을 활용해 성능을 끌어올렸습니다.
-또한, Up Sampling과 Skip Connection을 통한 세밀한 Localization이 가능합니다.
+이러한 한계를 해결하기 위한 **UNet**은 소량의 학습 데이터로도 **정확한 Segmentation을 수행**할 수 있으며, 데이터 증강을 활용해 성능을 끌어올렸습니다.
+
+또한, **Up Sampling과 Skip Connection을 통한 세밀한 Localization이 가능**합니다.
 
 ---
 
