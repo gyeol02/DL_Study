@@ -66,11 +66,6 @@ class Config:
         metadata={"help": "The batch size to use."}
     )
 
-    crop_size: int = field(
-        default=32,
-        metadata={"help": "The crop size to use."}
-    )
-
     opt_name: str = field(
         default="adam",
         metadata={"help": "The name of the optimizer to use."}
@@ -81,20 +76,27 @@ class Config:
         metadata={"help": "The learning rate to use."}
     )
 
-    data_dir: str = field(
-        default="./dataset/data",
-        metadata={"help": "Dataset root directory"}
+    early_stopping: int = field(
+        default=None,
+        metadata={"help": "The number of epochs to wait before early stopping."}
     )
 
     num_epochs: int = field(
         default=100,
         metadata={"help": "The number of epochs to train for."}
     )
-
-    early_stopping: int = field(
-        default=None,
-        metadata={"help": "The number of epochs to wait before early stopping."}
+    
+    image_size: int = field(
+        default=32,
+        metadata={"help": "The image size to use."}
     )
+
+    data_dir: str = field(
+        default="./dataset/isic",
+        metadata={"help": "Dataset image directory"}
+    )
+
+
 
 def model_type(config: Config):
     if config.model_name == "unet":
@@ -161,7 +163,7 @@ def main():
     print(f"Model: {config.model_name}")
 
     model = model_type(config).to(device)
-    train_loader, val_loader = dataset_loader(config.data_dir, config.batch_size, config.crop_size)
+    train_loader, val_loader = dataset_loader(config.data_dir, config.batch_size, config.image_size)
 
     criterion = nn.CrossEntropyLoss()
     if config.opt_name == "adam":

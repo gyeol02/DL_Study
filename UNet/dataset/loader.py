@@ -1,18 +1,13 @@
 import os
 import torch
 from torch.utils.data import DataLoader, random_split
-from torchvision import transforms
 from dataset.unet_dataset import UNetDataset
 
-def dataset_loader(data_dir, batch_size, crop_size, val_ratio=0.2):
+def dataset_loader(data_dir, batch_size, image_size, val_ratio=0.2):
     image_dir = os.path.join(data_dir, "images")
-    label_dir = os.path.join(data_dir, "labels")
+    label_dir = os.path.join(data_dir, "masks")
 
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-
-    dataset = UNetDataset(image_dir, label_dir, crop_size, transform=transform)
+    dataset = UNetDataset(image_dir, label_dir, image_size=image_size)
     val_size = int(len(dataset) * val_ratio)
     train_size = len(dataset) - val_size
 
