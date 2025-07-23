@@ -1,5 +1,6 @@
 # Python 관련
 __pycache__/
+.vscode/
 *.pyc
 *.pyo
 *.pyd
