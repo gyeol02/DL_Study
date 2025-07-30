@@ -23,8 +23,6 @@ class UNetDataset(Dataset):
             T.ToTensor()
         ])
 
-        
-
     def __len__(self):
         return len(self.image_paths)
 
@@ -35,6 +33,5 @@ class UNetDataset(Dataset):
         image = self.trainsform_img(image)
         mask = self.trainsform_mask(mask)
         mask = (mask > 0.5).long().squeeze(0)
-
 
         return image, mask
