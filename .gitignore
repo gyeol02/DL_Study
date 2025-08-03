@@ -6,7 +6,11 @@ __pycache__/
 *.pyd
 *.so
 
+# data 관련
+UNet/dataset/data/
+Transformer/dataset/data/
+Transformer/checkpoints/
+
 # macOS 숨김파일
 .DS_Store
-
 
