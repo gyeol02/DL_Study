@@ -12,5 +12,5 @@
   "val_ratio": 0.2,
   "num_workers": 2,
 
-  "data_dir": "./dataset/isic"
+  "data_dir": "./dataset/data/ISIC"
 }
