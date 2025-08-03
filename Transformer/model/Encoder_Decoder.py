@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-from Transformer.model.Attention import Multi_Head_Attention
+from model.Attention import Multi_Head_Attention
 
 """ Encoder & Decoder Stack"""
 class Encoder(nn.Module):

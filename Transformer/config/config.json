@@ -1,0 +1,18 @@
+{
+    "device": "cpu",
+    "seed": 42,
+    "model_name": "transformer",
+
+    "d_model": 512,
+    "num_heads": 8,
+    "d_ff"     : 2048,
+    "num_layers": 6,
+
+    "batch_size": 10,
+
+    "data_dir": "./dataset/data",
+    "num_epochs": 10,
+
+    "tokenizer_name": "t5-small",
+    "max_length":  128
+}

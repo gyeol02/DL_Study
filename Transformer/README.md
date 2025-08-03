@@ -69,3 +69,6 @@ UNet/
 │   └── Attension.py            # Scaled Dot-Product, Multi-Head Attention 등 Attention 모듈
 ├── utils/
 │   └── mask.py                 # padding mask, subsequent mask, combined mask 함수 정의
+├── scripts/
+│   └── train_val.py            # Trainer & Validator 정의
+├── main.py                     # main 

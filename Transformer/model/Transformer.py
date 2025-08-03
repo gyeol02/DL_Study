@@ -3,8 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-from Transformer.model.Encoder_Decoder import Encoder, Decoder
-from Transformer.utils.mask import create_padding_mask, create_look_ahead_mask
+from model.Encoder_Decoder import Encoder, Decoder
+#from utils.mask import create_padding_mask, create_look_ahead_mask
 
 class Transformer(nn.Module):
     def __init__(self, src_vocab_size, tgt_vocab_size,
@@ -25,39 +25,26 @@ class Transformer(nn.Module):
         # 3. Final output projection (to vocab size)
         self.output_layer = nn.Linear(d_model, tgt_vocab_size)
 
-    def forward(self, src, tgt, src_mask=None, tgt_mask=None, memory_mask=None):
+    def forward(self, input_ids, decoder_input_ids, attention_mask=None, decoder_attention_mask=None, labels=None):
         """
-        src: (batch, src_len) - token indices
-        tgt: (batch, tgt_len) - token indices
+        src: (batch, src_len) - input_ids
+        tgt: (batch, tgt_len) - decoder_input_ids
+        attention_mask: (batch, src_len) - encoder mask
+        decoder_attention_mask: (batch, tgt_len) - decoder mask (look-ahead mask는 외부에서 넣는다고 가정)
         """
 
-        B, src_len = src.shape
-        B, tgt_len = tgt.shape
-
-        if src_mask is None:
-            src_mask = create_padding_mask(src)                               # (B, 1, 1, src_len)
-
-        if tgt_mask is None:
-            padding_mask = create_padding_mask(tgt)                           # (B, 1, 1, tgt_len)
-            look_ahead_mask = create_look_ahead_mask(tgt_len).to(tgt.device)  # (tgt_len, tgt_len)
-            look_ahead_mask = look_ahead_mask.unsqueeze(0).unsqueeze(1)       # (1, 1, tgt_len, tgt_len)
-            tgt_mask = padding_mask & look_ahead_mask                         # (B, 1, tgt_len, tgt_len)
-
-        if memory_mask is None:
-            memory_mask = create_padding_mask(src)                            # (B, 1, 1, src_len)
-
-        # 1. Embedding + Positional Encoding
-        src_emb = self.pos_encoding(self.src_embedding(src) * (self.d_model ** 0.5))  # (B, src_len, D)
-        tgt_emb = self.pos_encoding(self.tgt_embedding(tgt) * (self.d_model ** 0.5))  # (B, tgt_len, D)
+        # 1. Embedding + PositionalEncoding
+        src_emb = self.pos_encoding(self.src_embedding(input_ids) * (self.d_model ** 0.5))  # (B, src_len, D)
+        tgt_emb = self.pos_encoding(self.tgt_embedding(decoder_input_ids) * (self.d_model ** 0.5))  # (B, tgt_len, D)
 
         # 2. Encoder
-        memory = self.encoder(src_emb, src_mask)                              # (B, src_len, D)
+        memory = self.encoder(src_emb, attention_mask)  # (B, src_len, D)
 
         # 3. Decoder
-        out = self.decoder(tgt_emb, memory, tgt_mask, memory_mask)            # (B, tgt_len, D)
+        out = self.decoder(tgt_emb, memory, decoder_attention_mask, attention_mask)  # (B, tgt_len, D)
 
-        # 4. Output Projection to vocab
-        logits = self.output_layer(out)                                       # (B, tgt_len, vocab_size)
+        # 4. Output Projection
+        logits = self.output_layer(out)  # (B, tgt_len, vocab_size)
         return logits
     
 """ Positional Encoding"""
