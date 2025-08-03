@@ -62,7 +62,9 @@ Transformer는 **Encoder-Decoder** 구조로 구성됩니다.
 
 ## 5. 디렉토리 구조
 ```
-UNet/
+Transformer/
+├── config/
+│   └── config.json             # 실험 설정값을 json으로 정의
 ├── models/                     
 │   └── Transformer.py          # Transformer Class 구현
 │   └── Encoder_Decoder.py      # Encoder, Decoder 구현
@@ -70,5 +72,13 @@ UNet/
 ├── utils/
 │   └── mask.py                 # padding mask, subsequent mask, combined mask 함수 정의
 ├── scripts/
-│   └── train_val.py            # Trainer & Validator 정의
+│   └── train_val_test.py       # Trainer & Validator & Testor 정의
+├── dataset/
+│   ├── data/                   # HuggingFace 다운로드 데이터가 저장되는 디렉토리
+│   └── loader.py               # dataset_loader 함수 정의 (train/val/test 로더 생성)
+├── utils/
+│   └── mask.py
+│   └── scheduler.py            # Learning rate scheduler 
 ├── main.py                     # main 
+├── test.py                     # test 
+```
