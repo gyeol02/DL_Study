@@ -18,12 +18,24 @@ T = TypeVar("T")
 
 def set_seed(seed=42):
     torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+    if torch.backends.mps.is_available():
+        # MPS doesn't need deterministic/benchmark settings
+        pass
+    elif torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+def get_device(preferred: str = "mps") -> torch.device:
+    if preferred == "mps" and torch.backends.mps.is_available():
+        return torch.device("mps")
+    elif torch.cuda.is_available():
+        return torch.device("cuda")
+    else:
+        return torch.device("cpu")
 
 def parse_config(config_path: str, cls: Type[T]) -> T:
     with open(config_path, "r") as f:
@@ -36,7 +48,8 @@ def parse_config(config_path: str, cls: Type[T]) -> T:
 
 @dataclass
 class Config:
-    device: str = field(default="cuda" if torch.cuda.is_available() else "cpu")
+    device: str = field(default="mps" if torch.backends.mps.is_available() else (
+                            "cuda" if torch.cuda.is_available() else "cpu"))
     seed: int = field(default=42)
     model_name: str = field(default="transformer")
 
@@ -73,8 +86,8 @@ def main():
 
     set_seed(config.seed)
 
-    device = torch.device(config.device if torch.cuda.is_available() or config.device == "cpu" else "cpu")
-    print(f"[Device] Using {device}")
+    device = get_device(config.device)
+    print(f"[Device] {device}")
 
     # Load dataset and tokenizer
     train_loader, tokenizer = dataset_loader(
