@@ -1,0 +1,117 @@
+import os
+import random
+import sys
+import numpy as np
+
+import json
+from typing import Type, TypeVar
+from dataclasses import dataclass, field, fields
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+from models.unet import UNet
+from dataset.loader import dataset_loader
+from scripts.train_val_test import Trainer, Validator, create_checkpoint_folder
+
+T = TypeVar('T')
+
+def set_seed(seed=42):
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    if torch.backends.mps.is_available():
+        # MPS doesn't need deterministic/benchmark settings
+        pass
+    elif torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+def get_device(preferred: str = "mps") -> torch.device:
+    if preferred == "mps" and torch.backends.mps.is_available():
+        return torch.device("mps")
+    elif torch.cuda.is_available():
+        return torch.device("cuda")
+    else:
+        return torch.device("cpu")
+
+def parse_config(config_path: str, cls: Type[T]) -> T:
+    with open(config_path, "r") as f:
+        config_data = json.load(f)
+    
+    cls_fields = {field.name for field in fields(cls)}
+    filtered_data = {k: v for k, v in config_data.items() if k in cls_fields}
+    
+    return cls(**filtered_data)
+
+@dataclass
+class Config:
+    device: str = field(default="mps" if torch.backends.mps.is_available() else (
+                            "cuda" if torch.cuda.is_available() else "cpu"))
+    seed: int = field(default=42)
+    model_name: str = field(default="unet")
+
+    in_channels: int = field(default=10)
+    out_channels: int = field(default=10)
+    image_size: int = field(default=32)
+
+    batch_size: int = field(default=128)
+    num_epochs: int = field(default=100)
+
+    opt_name: str = field(default="adam")
+    lr: float = field(default=1e-3)
+
+    early_stopping: int = field(default=None)
+
+    data_dir: str = field(default="./dataset/data/isic")
+
+
+
+def model_type(config: Config):
+    if config.model_name == "unet":
+        return UNet(in_ch=config.in_channels, out_ch=config.out_channels)
+    else:
+        raise ValueError(f"Unsupported model: {config.model_name}")
+
+
+def main():
+    if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
+        config = parse_config(sys.argv[1], Config)
+
+    device = torch.device(config.device)
+    print(f"Using device: {device}")
+    print(f"Model: {config.model_name}")
+
+    model = model_type(config).to(device)
+    train_loader, val_loader, _ = dataset_loader(config.data_dir, config.batch_size, config.image_size)
+
+    if config.opt_name == "adam":
+        optimizer = optim.Adam(model.parameters(), lr=config.lr)
+    elif config.opt_name == "sgd":
+        optimizer = optim.SGD(model.parameters(), lr=config.lr, momentum=0.9)
+    else:
+        raise ValueError(f"Unsupported optimizer: {config.opt_name}")
+    
+    criterion = nn.CrossEntropyLoss()
+
+    checkpoint_dir = create_checkpoint_folder(base_path="checkpoints")
+    
+    trainer = Trainer(
+        model=model,
+        train_loader=train_loader,
+        val_loader=val_loader,
+        optimizer=optimizer,
+        criterion=criterion,
+        num_epochs=config.num_epochs,
+        checkpoint_dir=checkpoint_dir,
+        device=device
+    )
+
+    trainer.train()
+
+
+if __name__ == "__main__":
+    main()
