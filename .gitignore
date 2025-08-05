@@ -8,6 +8,8 @@ __pycache__/
 
 # data 관련
 UNet/dataset/data/
+UNet/checkpoints/
+
 Transformer/dataset/data/
 Transformer/checkpoints/
 
