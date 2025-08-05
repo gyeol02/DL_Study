@@ -131,15 +131,5 @@ def main():
 
     trainer.train()
 
-    validator = Validator(
-        model=model,
-        val_loader=val_loader,
-        criterion=criterion,
-        tokenizer=tokenizer,
-        checkpoint_dir=checkpoint_dir
-    )
-
-    validator.validate()
-
 if __name__ == "__main__":
     main()
