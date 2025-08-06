@@ -18,6 +18,7 @@ from scripts.train_val_test import Trainer, Validator, create_checkpoint_folder
 T = TypeVar('T')
 
 def set_seed(seed=42):
+    print(f"[Seed] Using seed: {seed}")
     torch.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
@@ -29,14 +30,6 @@ def set_seed(seed=42):
         torch.cuda.manual_seed_all(seed)
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
-
-def get_device(preferred: str = "mps") -> torch.device:
-    if preferred == "mps" and torch.backends.mps.is_available():
-        return torch.device("mps")
-    elif torch.cuda.is_available():
-        return torch.device("cuda")
-    else:
-        return torch.device("cpu")
 
 def parse_config(config_path: str, cls: Type[T]) -> T:
     with open(config_path, "r") as f:
@@ -78,8 +71,10 @@ def model_type(config: Config):
 
 
 def main():
-    if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
-        config = parse_config(sys.argv[1], Config)
+    config_path = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1].endswith(".json") else "config.json"
+    config = parse_config(config_path, Config)
+
+    set_seed(config.seed)
 
     device = torch.device(config.device)
     print(f"Using device: {device}")

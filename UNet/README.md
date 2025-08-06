@@ -52,10 +52,12 @@ UNet/
 ├── config/
 │   └── config.json         # 모델 및 학습 설정
 ├── dataset/
-│   └── loader.py           # 데이터셋 로딩 및 전처리
+│   └── loader.py           # 데이터셋 로드
+│   └── unet_dataset.py     # 데이터셋 전처리
 ├── models/
 │   └── unet.py             # UNet 모델 구현
 ├── scripts/
-│   └── main.py             # 학습 및 테스트 실행
+│   └── train_val_test.py   # Trainer & Validator & Testor 정의
 ├── utils/
 │   └── metrics.py          # IoU 계산
+├── main.py                 # main
