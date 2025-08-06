@@ -17,6 +17,7 @@ from utils.scheduler import get_transformer_scheduler
 T = TypeVar("T")
 
 def set_seed(seed=42):
+    print(f"[Seed] Using seed: {seed}")
     torch.manual_seed(seed)
     np.random.seed(seed)
     random.seed(seed)
@@ -28,14 +29,6 @@ def set_seed(seed=42):
         torch.cuda.manual_seed_all(seed)
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
-
-def get_device(preferred: str = "mps") -> torch.device:
-    if preferred == "mps" and torch.backends.mps.is_available():
-        return torch.device("mps")
-    elif torch.cuda.is_available():
-        return torch.device("cuda")
-    else:
-        return torch.device("cpu")
 
 def parse_config(config_path: str, cls: Type[T]) -> T:
     with open(config_path, "r") as f:
@@ -86,8 +79,9 @@ def main():
 
     set_seed(config.seed)
 
-    device = get_device(config.device)
+    device = torch.device(config.device)
     print(f"[Device] {device}")
+    print(f"Model: {config.model_name}")
 
     # Load dataset and tokenizer
     train_loader, tokenizer = dataset_loader(

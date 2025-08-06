@@ -34,7 +34,8 @@ def parse_config(config_path: str, cls: Type[T]) -> T:
 
 @dataclass
 class Config:
-    device: str = field(default="cuda" if torch.cuda.is_available() else "cpu")
+    device: str = field(default="mps" if torch.backends.mps.is_available() else (
+                            "cuda" if torch.cuda.is_available() else "cpu"))
     seed: int = field(default=42)
     model_name: str = field(default="transformer")
 
