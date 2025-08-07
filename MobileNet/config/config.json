@@ -1,0 +1,18 @@
+{
+    "device": "mps",
+    "seed":42,
+    "model_name": "mobilnet",
+
+    "n_classes": 10,
+    "image_size": [256, 256],
+
+    "batch_size": 10,
+    "num_epochs": 10,
+
+    "opt_name": "adam",
+    "lr": 0.045,
+
+    "early_stopping": 10,
+
+    "data_dir": "./dataset/data"
+}
