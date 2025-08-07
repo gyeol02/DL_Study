@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
         
-class RNN_Basic(nn.Module):
+class RNN(nn.Module):
     def __init__(self, in_ch, hidden_ch, num_classes=2):
         super().__init__()
         self.in_ch = in_ch

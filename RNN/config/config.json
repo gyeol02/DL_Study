@@ -1,7 +1,7 @@
 {
     "device": "mps",
     "seed": 42,
-    "model_name": "rnn_basic",
+    "model_name": "rnn",
 
     "n_classes": 2,
     "hidden_size": 128,

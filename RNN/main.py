@@ -13,7 +13,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 
-from models.rnn import RNN_Basic
+from models.rnn import RNN
 from scripts.train_val_test import Trainer, create_checkpoint_folder
 from dataset.loader import dataset_loader
 
@@ -63,8 +63,8 @@ class Config:
 
 
 def model_type(config: Config, vocab_size: int):
-    if config.model_name == "rnn_basic":
-        return RNN_Basic(in_ch=vocab_size, hidden_ch=config.hidden_size, num_classes=config.n_classes)
+    if config.model_name == "rnn":
+        return RNN(in_ch=vocab_size, hidden_ch=config.hidden_size, num_classes=config.n_classes)
     else:
         raise ValueError(f"Unsupported model: {config.model_name}")
 
