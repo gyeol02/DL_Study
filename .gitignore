@@ -16,6 +16,9 @@ UNet/checkpoints/
 Transformer/dataset/data/
 Transformer/checkpoints/
 
+MobileNet/dataset/data/
+MobileNet/checkpoints/
+
 # macOS 숨김파일
 .DS_Store
 
