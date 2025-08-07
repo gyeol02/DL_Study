@@ -69,8 +69,6 @@ Transformer/
 │   └── Transformer.py          # Transformer Class 구현
 │   └── Encoder_Decoder.py      # Encoder, Decoder 구현
 │   └── Attension.py            # Scaled Dot-Product, Multi-Head Attention 등 Attention 모듈
-├── utils/
-│   └── mask.py                 # padding mask, subsequent mask, combined mask 함수 정의
 ├── scripts/
 │   └── train_val_test.py       # Trainer & Validator & Testor 정의
 ├── dataset/
