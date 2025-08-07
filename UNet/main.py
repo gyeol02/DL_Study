@@ -49,7 +49,7 @@ class Config:
 
     in_channels: int = field(default=10)
     out_channels: int = field(default=10)
-    image_size: int = field(default=32)
+    image_size: int = field(default=[256, 256])
 
     batch_size: int = field(default=128)
     num_epochs: int = field(default=100)

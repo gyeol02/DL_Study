@@ -1,4 +1,3 @@
-# scripts/train_val_test.py
 import os
 import time
 import torch
