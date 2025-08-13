@@ -1,16 +1,16 @@
 {
     "device": "mps",
     "seed":42,
-    "model_name": "mobilnet",
+    "model_name": "mobilenet",
 
     "n_classes": 10,
-    "image_size": [256, 256],
+    "image_size": [128, 128],
 
-    "batch_size": 10,
-    "num_epochs": 10,
+    "batch_size": 64,
+    "num_epochs": 20,
 
     "opt_name": "adam",
-    "lr": 0.045,
+    "lr": 1e-4,
 
     "early_stopping": 10,
 
