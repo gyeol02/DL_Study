@@ -27,7 +27,7 @@ class Decoder(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, num_layers, dropout=0.1):
         super().__init__()
         self.layers = nn.ModuleList([
-            DecoderBlock(d_model, num_heads, d_ff, dropout)
+            Decoder_Block(d_model, num_heads, d_ff, dropout)
             for _ in range(num_layers)
         ])
 
@@ -69,7 +69,7 @@ class Encoder_Block(nn.Module):
 
         return x
     
-class DecoderBlock(nn.Module):
+class Decoder_Block(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
         super().__init__()
         # 1. Masked Self-Attention
