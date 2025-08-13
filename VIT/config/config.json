@@ -1,0 +1,28 @@
+{
+  "device": "mps",
+  "seed": 42,
+  "model_name": "vit",
+
+  "patch_size": 6,
+  "in_channels": 3,
+  "n_classes": 100,
+  "embed_dim": 384,
+  "layers": 8,
+  "num_heads": 6,
+  "mlp_ratio": 4.0,
+  "drop_rate": 0.1,
+  "attn_drop_rate": 0.1,
+  "drop_path_rate": 0.1,
+
+  "num_epochs": 20,
+  "lr": 0.003,
+  "weight_decay": 0.05,
+  "warmup_epochs": 5,
+  
+  "data_name": "CIFAR100",
+  "data_dir": "./dataset/data",
+  "image_size": 128,
+  "val_ratio": 0.2,
+  "batch_size": 32,
+  "num_workers": 2
+}
