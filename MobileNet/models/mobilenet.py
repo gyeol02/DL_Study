@@ -1,8 +1,4 @@
 import torch.nn as nn
-import torch.nn.functional as F
-
-# MobileNet_v1
-import torch.nn as nn
 
 class MobileNet(nn.Module):
     def __init__(self, num_classes=10):

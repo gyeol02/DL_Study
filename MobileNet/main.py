@@ -45,7 +45,7 @@ class Config:
     device: str = field(default="mps" if torch.backends.mps.is_available() else (
                             "cuda" if torch.cuda.is_available() else "cpu"))
     seed: int = field(default=42)
-    model_name: str = field(default="unet")
+    model_name: str = field(default="mobilnet")
 
     n_classes: int = field(default=10)
     image_size: list = field(default_factory=lambda: [256, 256])
@@ -63,7 +63,7 @@ class Config:
 
 
 def model_type(config: Config):
-    if config.model_name == "mobilnet":
+    if config.model_name == "mobilenet":
         return MobileNet(num_classes=config.n_classes)
     else:
         raise ValueError(f"Unsupported model: {config.model_name}")
