@@ -7,18 +7,8 @@ __pycache__/
 *.so
 
 # data 관련
-RNN/dataset/data/
-RNN/checkpoints/
-
-UNet/dataset/data/
-UNet/checkpoints/
-
-Transformer/dataset/data/
-Transformer/checkpoints/
-
-MobileNet/dataset/data/
-MobileNet/checkpoints/
+**/dataset/data
+checkpoints/
 
 # macOS 숨김파일
 .DS_Store
-
