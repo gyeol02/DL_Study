@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from models.unet import UNet
+from model.unet import UNet
 from dataset.loader import dataset_loader
 from scripts.train_val_test import Trainer, Validator, create_checkpoint_folder
 
