@@ -1,0 +1,26 @@
+{ 
+    "device": "mps", 
+    "seed": 42,
+    "model_name": "Transformer",
+
+    "data_dir": "./dataset/data",
+
+    "batch_size": 32,
+    "num_epochs": 10,
+    "lr": 1.0,
+
+    "tokenizer_name": "t5-small",
+    "max_length":  128,
+
+    "model_params": {
+        "src_vocab_size": 32128,
+        "tgt_vocab_size": 32128,
+        "d_model": 512,
+        "num_heads": 8,
+        "num_encoder_layers": 6, 
+        "num_decoder_layers": 6,
+        "d_ff": 2048,
+        "max_len": 128,
+        "dropout": 0.1
+    }
+}

@@ -1,0 +1,21 @@
+{ 
+    "device": "mps", 
+    "seed": 42,
+    "model_name": "UNet_ISIC",
+
+    "data_dir": "./dataset/data/ISIC",
+
+    "batch_size": 16,
+    "num_epochs": 20,
+    "lr": 0.001,
+    "opt_name": "sgd",
+    "early_stopping": 10,
+
+    "image_size": [256, 256],
+    "num_workers": 2,
+
+    "model_params": {
+        "in_channels": 3,
+        "out_channels": 2
+    }
+}

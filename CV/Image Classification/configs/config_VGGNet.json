@@ -1,0 +1,17 @@
+{
+    "device": "mps", 
+    "seed": 42, 
+    "model_name": "VGGNet11",
+
+    "data_dir": "./dataset/data",
+
+    "batch_size": 64,
+    "num_epochs": 100,
+    "lr": 0.001,
+    "opt_name": "sgd",
+    "early_stopping": 10,
+
+    "model_params": {
+        "n_classes": 10
+    }
+}
